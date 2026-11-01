@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('r2:warm-stats')->hourly()->withoutOverlapping();
 
+Schedule::command('app:check-release')->everySixHours();
+
 Schedule::command('newsletter:purge-unconfirmed')->daily();
 
 Schedule::command('nightscope:import-catalog --latest')
