@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root{color-scheme:dark;--bg:#0d1117;--accent:#58a6ff;--text:#c9d1d9;--muted:#8b949e;--border:#30363d;font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--text)}
+*{box-sizing:border-box}
+body{margin:0;min-width:280px;background:radial-gradient(ellipse at 50% 40%,#14233780,transparent 60%)}
+a{color:inherit;text-decoration:none}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:6px}
+.page{position:relative;max-width:1320px;min-height:100svh;margin:auto;padding:calc(36px + env(safe-area-inset-top,0px)) 48px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
+.starfield{position:fixed;inset:0;pointer-events:none;opacity:.4;background-image:radial-gradient(1px 1px at 15% 24%,#b4d7ff 99%,transparent),radial-gradient(1px 1px at 78% 16%,#b4d7ff 99%,transparent),radial-gradient(1px 1px at 64% 72%,#b4d7ff 99%,transparent),radial-gradient(1px 1px at 32% 84%,#b4d7ff 99%,transparent),radial-gradient(2px 2px at 91% 53%,#58a6ff 99%,transparent);background-size:430px 370px,570px 460px,690px 530px,510px 610px,890px 740px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{font-size:28px;font-weight:700;letter-spacing:-1.4px;color:#f0f6fc}
+.brand span{display:block;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:400;letter-spacing:2px;color:var(--accent)}
+.header-label,.footer,.sky-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--muted)}
+.header-label{padding:9px 12px;border:1px solid var(--border);border-radius:4px}
+.error{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 0 56px;text-align:center}
+.sky{position:relative;width:min(600px,100%);height:300px;display:grid;place-items:center}
+.orbit{position:absolute;width:100%;height:100%;overflow:visible}
+.error-code{position:relative;font-size:clamp(100px,17vw,170px);font-weight:700;letter-spacing:-.075em;line-height:1;color:#f0f6fc;text-shadow:0 5px 45px #03091080}
+.sky-label{position:absolute;bottom:4px;color:#7195bd;font-size:9px}
+.message{max-width:580px;margin-top:32px}
+.eyebrow{display:flex;align-items:center;justify-content:center;gap:9px;margin:0 0 16px;color:var(--accent);font:10px 'JetBrains Mono',monospace;letter-spacing:2px;text-transform:uppercase}
+.eyebrow span{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px #58a6ff80}
+h1{font-size:clamp(28px,5vw,42px);letter-spacing:-1.5px;line-height:1.2;color:#f0f6fc;margin:0 0 18px;font-weight:500;text-wrap:balance}
+.description{max-width:470px;margin:0 auto;font-size:16px;line-height:1.8;color:var(--muted);text-wrap:pretty}
+.actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-top:30px}
+.button{min-height:48px;padding:13px 20px;display:inline-flex;justify-content:center;align-items:center;gap:12px;border:1px solid transparent;border-radius:7px;font-size:13px;font-weight:500;transition:background .2s,border-color .2s}
+.button svg{width:17px;height:17px}
+.button-primary{background:var(--accent);color:#0d1117;border-color:var(--accent)}
+.button-primary:hover{background:#83bdff;border-color:#83bdff}
+.button-secondary{background:#161b2280;border-color:var(--border)}
+.button-secondary:hover{background:#1e2b3c;border-color:#7195bd}
+.button-secondary span{color:var(--accent);font-size:18px}
+.hint{margin:22px 0 0;color:var(--muted);font-size:12px;line-height:1.7}
+.footer{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid #30363d80;padding-top:22px;font-size:9px;letter-spacing:1.3px;line-height:1.7}
+.footer-star{color:var(--accent);margin-left:8px}
+@media(max-width:600px){.page{padding-left:24px;padding-right:24px}.header-label{display:none}.brand{font-size:24px}.sky{height:240px}.error{padding:32px 0 40px}.message{margin-top:24px}.description{font-size:15px}.footer{flex-direction:column;text-align:center;gap:7px}.actions{gap:10px}.button{width:100%}}
+@media(prefers-reduced-motion:reduce){.button{transition:none}}

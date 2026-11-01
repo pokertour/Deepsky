@@ -1,0 +1,60 @@
+name: Tests
+
+on:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-26.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: bcmath, exif, gd, imagick, intl, pcntl, pdo_sqlite, zip
+          ini-values: memory_limit=1G
+          coverage: none
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Install npm dependencies and build assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Audit dependencies
+        run: |
+          composer audit --no-interaction
+          npm audit --audit-level=high
+
+      - name: Check code style
+        run: vendor/bin/pint --test
+
+      - name: Run PHP tests
+        run: php artisan test --compact
+
+      - name: Run JavaScript tests
+        run: node --test tests/Browser/*.test.mjs

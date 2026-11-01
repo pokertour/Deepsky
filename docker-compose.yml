@@ -1,0 +1,80 @@
+services:
+  app:
+    image: ghcr.io/pokertour/deepsky-portfolio:latest
+    container_name: deepsky-app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+    depends_on:
+      redis:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+    volumes:
+      - ./storage:/var/www/html/storage
+
+  mariadb:
+    image: mariadb:11.4
+    container_name: deepsky-mariadb
+    restart: unless-stopped
+    # Exposé uniquement en local (tunnel SSH / client SQL sur l'hôte), jamais sur Internet.
+    ports:
+      - "127.0.0.1:3308:3306"
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE:-deepsky}
+      MARIADB_USER: ${DB_USERNAME:-deepsky}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Sauvegarde quotidienne de la base dans ./backups (rotation après BACKUP_RETENTION_DAYS jours).
+  # Restauration : gunzip -c backups/deepsky-AAAAMMJJ-HHMM.sql.gz | docker exec -i deepsky-mariadb mariadb -u deepsky -p deepsky
+  mariadb-backup:
+    image: mariadb:11.4
+    container_name: deepsky-mariadb-backup
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE:-deepsky}
+      MARIADB_USER: ${DB_USERNAME:-deepsky}
+      MYSQL_PWD: ${DB_PASSWORD}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
+    volumes:
+      - ./backups:/backups
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        while true; do
+          file="/backups/deepsky-$$(date +%Y%m%d-%H%M).sql.gz"
+          if mariadb-dump -h mariadb -u "$$MARIADB_USER" --single-transaction --routines --triggers "$$MARIADB_DATABASE" > /tmp/dump.sql; then
+            gzip -c /tmp/dump.sql > "$$file.tmp" && mv "$$file.tmp" "$$file" && echo "Sauvegarde OK : $$file"
+          else
+            echo "Échec de la sauvegarde" >&2
+          fi
+          rm -f /tmp/dump.sql
+          find /backups -name 'deepsky-*.sql.gz' -mtime +"$$BACKUP_RETENTION_DAYS" -delete
+          sleep 86400
+        done
+
+  redis:
+    image: redis:alpine
+    container_name: deepsky-redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  mariadb-data:

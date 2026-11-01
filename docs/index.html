@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Deepsky — Portfolio d’astrophotographie et observatoire personnel</title>
+    <meta name="description" content="Deepsky est une application auto-hébergée pour exposer ses photos du ciel profond, explorer le ciel en direct et préparer ses nuits d’imagerie avec NightScope.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Deepsky — Portfolio d’astrophotographie et observatoire personnel">
+    <meta property="og:description" content="Galerie du ciel profond, planétarium en direct, réalité augmentée et cockpit NightScope pour préparer ses nuits. Auto-hébergé avec Docker.">
+    <meta property="og:image" content="assets/img/gallery.webp">
+    <meta name="theme-color" content="#0d1117">
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+    <canvas id="sky" aria-hidden="true"></canvas>
+
+    <header class="topbar">
+        <a href="#" class="brand"><img src="assets/logo.svg" alt="" width="34" height="34"><span>DEEPSKY</span></a>
+        <nav class="topnav" aria-label="Sections">
+            <a href="#galerie" data-i18n="nav.public">Le site</a>
+            <a href="#nightscope" data-i18n="nav.nightscope">NightScope</a>
+            <a href="#securite" data-i18n="nav.security">Sécurité</a>
+            <a href="#installation" data-i18n="nav.install">Installation</a>
+        </nav>
+        <div class="topbar-actions">
+            <div class="lang" role="group" aria-label="Langue / Language">
+                <button type="button" data-lang="fr">FR</button>
+                <button type="button" data-lang="en">EN</button>
+            </div>
+            <a class="icon-link" href="https://github.com/pokertour/Deepsky" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-photo" aria-hidden="true"></div>
+            <div class="hero-content">
+                <p class="eyebrow"><span class="pulse"></span><span data-i18n="hero.eyebrow">Auto-hébergé · Open source · FR / EN</span></p>
+                <h1 data-i18n-html="hero.title">Vos photos du ciel profond,<br><em>avec le ciel autour.</em></h1>
+                <p class="lead" data-i18n="hero.lead">Deepsky est un portfolio d’astrophotographie qui pense comme un observatoire : chaque image est résolue, située dans le ciel, datée par l’âge de sa lumière. Côté coulisses, NightScope prépare vos nuits d’imagerie.</p>
+                <div class="cta">
+                    <a class="button primary" href="https://deepsky.nexus" data-i18n="hero.live">Voir le site en ligne ↗</a>
+                    <a class="button" href="#installation" data-i18n="hero.install">Installer avec Docker</a>
+                </div>
+                <ul class="stack" aria-label="Stack">
+                    <li>Laravel 13</li><li>PHP 8.5</li><li>Livewire 4</li><li>Tailwind 4</li><li>MariaDB</li><li>Redis</li><li>Docker</li>
+                </ul>
+            </div>
+            <figure class="hero-shot frame">
+                <div class="frame-bar"><span></span><span></span><span></span><code>deepsky.nexus</code></div>
+                <img src="assets/img/gallery.webp" alt="Galerie Deepsky" width="1600" height="1000" data-i18n-alt="alt.gallery">
+            </figure>
+        </section>
+
+        <section class="strip" aria-label="Photos">
+            <figure><img src="assets/img/iris.webp" alt="NGC 7023 — Iris Nebula" loading="lazy"><figcaption>NGC 7023 · Iris</figcaption></figure>
+            <figure><img src="assets/img/wizard.webp" alt="NGC 7380 — Wizard Nebula" loading="lazy"><figcaption>NGC 7380 · Wizard</figcaption></figure>
+            <figure><img src="assets/img/fireworks.webp" alt="NGC 6946 — Fireworks Galaxy" loading="lazy"><figcaption>NGC 6946 · Fireworks</figcaption></figure>
+            <figure><img src="assets/img/crescent.webp" alt="NGC 6888 — Crescent Nebula" loading="lazy"><figcaption>NGC 6888 · Crescent</figcaption></figure>
+            <figure><img src="assets/img/whale.webp" alt="NGC 4631 — Whale Galaxy" loading="lazy"><figcaption>NGC 4631 · Whale</figcaption></figure>
+        </section>
+
+        <section id="galerie" class="section">
+            <p class="kicker" data-i18n="public.kicker">01 · Le site public</p>
+            <h2 data-i18n="public.title">Une galerie qui raconte la nuit derrière chaque image</h2>
+
+            <article class="feature">
+                <div class="feature-text">
+                    <h3 data-i18n="f.gallery.title">Galerie et fiches photo</h3>
+                    <p data-i18n="f.gallery.text">Filtres par type d’objet, constellation, année et matériel. Chaque fiche détaille les sessions d’acquisition, les filtres, le matériel, la version starless et les annotations astrométriques : les objets du champ sont identifiés automatiquement par Astrometry.net.</p>
+                    <ul class="ticks">
+                        <li data-i18n="f.gallery.1">Plate solving et annotations du champ</li>
+                        <li data-i18n="f.gallery.2">Distances SIMBAD de l’objet et de tout le champ</li>
+                        <li data-i18n="f.gallery.3">Comparaison des versions d’une même cible</li>
+                        <li data-i18n="f.gallery.4">Pleine résolution, partage et likes</li>
+                    </ul>
+                </div>
+                <figure class="frame"><img src="assets/img/photo.webp" alt="" loading="lazy" width="1600" height="1000"></figure>
+            </article>
+
+            <article class="feature reverse">
+                <div class="feature-text">
+                    <h3 data-i18n="f.obs.title">Observatoire : le ciel en direct</h3>
+                    <p data-i18n="f.obs.text">Un planétarium calculé dans le navigateur : étoiles, constellations, Voie lactée, planètes et Lune à leur place exacte au-dessus de votre site. Les objets que vous avez photographiés y sont cerclés ; un clic ouvre la photo. Zoom, déplacement et curseur pour avancer dans la nuit.</p>
+                    <ul class="ticks">
+                        <li data-i18n="f.obs.1">Nuit noire, phase et lever de Lune, planètes visibles</li>
+                        <li data-i18n="f.obs.2">Carnet de bord : calendrier des nuits d’acquisition</li>
+                        <li data-i18n="f.obs.3">Intégration par filtre, cibles et tubes optiques</li>
+                    </ul>
+                </div>
+                <figure class="frame"><img src="assets/img/observatory.webp" alt="" loading="lazy" width="1600" height="1000"></figure>
+            </article>
+
+            <div class="cards">
+                <article class="card">
+                    <span class="card-icon" aria-hidden="true">◎</span>
+                    <h3 data-i18n="c.ar.title">Lève les yeux</h3>
+                    <p data-i18n="c.ar.text">Réalité augmentée sur mobile : pointez le téléphone vers le ciel, Deepsky dessine constellations, planètes et objets du portfolio là où ils sont vraiment, et une flèche guide vers la cible choisie.</p>
+                </article>
+                <article class="card">
+                    <span class="card-icon" aria-hidden="true">⤓</span>
+                    <h3 data-i18n="c.dive.title">La Plongée</h3>
+                    <p data-i18n="c.dive.text">Depuis une fiche photo, une animation part du ciel entier et plonge jusqu’au champ de l’image. Chaque objet identifié raconte depuis combien de temps sa lumière voyage.</p>
+                </article>
+                <article class="card">
+                    <span class="card-icon" aria-hidden="true">⧗</span>
+                    <h3 data-i18n="c.time.title">Remonter le temps</h3>
+                    <p data-i18n="c.time.text">Toutes les photos rangées sur une frise selon l’âge de leur lumière, face à l’histoire de la Terre : de l’Empire romain à l’apparition des dinosaures.</p>
+                </article>
+                <article class="card">
+                    <span class="card-icon" aria-hidden="true">✉</span>
+                    <h3 data-i18n="c.news.title">Newsletter</h3>
+                    <p data-i18n="c.news.text">Un email à chaque publication, avec double confirmation, captcha (Turnstile ou hCaptcha) et désinscription en un clic. Envoyée dans la langue de l’abonné.</p>
+                </article>
+            </div>
+
+            <div class="duo">
+                <figure class="frame"><img src="assets/img/time.webp" alt="" loading="lazy" width="1600" height="1000"></figure>
+                <div class="phones">
+                    <figure class="phone"><img src="assets/img/gallery-m.webp" alt="" loading="lazy" width="720" height="1558"></figure>
+                    <figure class="phone"><img src="assets/img/observatory-m.webp" alt="" loading="lazy" width="720" height="1558"></figure>
+                </div>
+            </div>
+        </section>
+
+        <section id="nightscope" class="section">
+            <p class="kicker" data-i18n="ns.kicker">02 · NightScope</p>
+            <h2 data-i18n="ns.title">Le cockpit pour préparer, photographier et publier</h2>
+            <p class="section-lead" data-i18n="ns.lead">L’administration est pensée pour le terrain : utilisable au téléphone, mode nuit rouge, plans consultables hors connexion.</p>
+
+            <article class="feature">
+                <div class="feature-text">
+                    <h3 data-i18n="f.tonight.title">Tonight : que photographier ce soir ?</h3>
+                    <p data-i18n="f.tonight.text">Un score par cible qui combine hauteur pendant la nuit astronomique, Lune, météo, cadrage avec votre rig et intérêt de l’objet. Avec le masque d’horizon de votre jardin, les arbres et les toits sont pris en compte.</p>
+                    <ul class="ticks">
+                        <li data-i18n="f.tonight.1">Prévisions astro sur 7 nuits (seeing, transparence, nuages)</li>
+                        <li data-i18n="f.tonight.2">Filtres conseillés selon le ciel, la Lune et le Bortle</li>
+                        <li data-i18n="f.tonight.3">Cadrage, rotation et grille de mosaïque</li>
+                        <li data-i18n="f.tonight.4">Night Planner, favoris et sessions d’imagerie</li>
+                    </ul>
+                </div>
+                <figure class="frame"><img src="assets/img/tonight.webp" alt="" loading="lazy" width="1600" height="1000"></figure>
+            </article>
+
+            <div class="cards">
+                <article class="card">
+                    <span class="card-icon" aria-hidden="true">⛶</span>
+                    <h3 data-i18n="c.fits.title">Import FITS / XISF</h3>
+                    <p data-i18n="c.fits.text">Glissez vos lights, flats et darks : les en-têtes sont lus dans le navigateur (rien n’est envoyé) et remplissent sessions, poses, filtres, gain et température.</p>
+                </article>
+                <article class="card">
+                    <span class="card-icon" aria-hidden="true">◷</span>
+                    <h3 data-i18n="c.pub.title">Publication programmée</h3>
+                    <p data-i18n="c.pub.text">Brouillon, suivi des conversions d’images, puis publication à la main ou à l’heure choisie, newsletter comprise.</p>
+                </article>
+                <article class="card">
+                    <span class="card-icon" aria-hidden="true">✦</span>
+                    <h3 data-i18n="c.ai.title">Textes et traductions Gemini</h3>
+                    <p data-i18n="c.ai.text">Une présentation accessible de l’objet rédigée à partir du catalogue, et la version anglaise de vos textes en un clic.</p>
+                </article>
+                <article class="card">
+                    <span class="card-icon" aria-hidden="true">⚙</span>
+                    <h3 data-i18n="c.tasks.title">Tâches automatiques</h3>
+                    <p data-i18n="c.tasks.text">Historique des traitements, relance d’un clic, rattrapage des conversions bloquées, purges et alertes Telegram, Gotify, ntfy ou email en cas d’échec.</p>
+                </article>
+            </div>
+
+            <figure class="frame wide"><img src="assets/img/dashboard.webp" alt="" loading="lazy" width="1600" height="1000"></figure>
+        </section>
+
+        <section id="securite" class="section">
+            <p class="kicker" data-i18n="sec.kicker">03 · Sécurité</p>
+            <h2 data-i18n="sec.title">Une administration bien gardée</h2>
+            <div class="security">
+                <ul class="ticks big">
+                    <li data-i18n="sec.1">Double authentification TOTP et codes de secours</li>
+                    <li data-i18n="sec.2">Verrouillage après 10 mots de passe erronés, limitation par IP</li>
+                    <li data-i18n="sec.3">Journal des connexions et alertes à chaque connexion</li>
+                    <li data-i18n="sec.4">Déconnexion à distance des autres sessions</li>
+                    <li data-i18n="sec.5">CSP, HSTS, anti-clickjacking, hôtes et proxys de confiance</li>
+                    <li data-i18n="sec.6">Secrets chiffrés en base, coordonnées du jardin jamais publiées</li>
+                </ul>
+                <div class="phones single">
+                    <figure class="phone"><img src="assets/img/login-m.webp" alt="" loading="lazy" width="720" height="1558"></figure>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation" class="section">
+            <p class="kicker" data-i18n="inst.kicker">04 · Installation</p>
+            <h2 data-i18n="inst.title">Votre propre Deepsky en quelques minutes</h2>
+            <p class="section-lead" data-i18n="inst.lead">Une image Docker est publiée sur le GitHub Container Registry à chaque version. Il vous faut Docker Compose, un bucket S3 compatible (Cloudflare R2, MinIO…) pour les images, et un nom de domaine derrière un reverse proxy.</p>
+
+            <ol class="steps">
+                <li>
+                    <h3 data-i18n="inst.1">Récupérer la configuration</h3>
+                    <pre><code>git clone https://github.com/pokertour/Deepsky.git deepsky
+cd deepsky
+cp .env.example .env</code></pre>
+                </li>
+                <li>
+                    <h3 data-i18n="inst.2">Renseigner le .env</h3>
+                    <div class="env">
+                        <div><code>APP_URL</code><span data-i18n="env.url">Adresse publique du site</span></div>
+                        <div><code>APP_KEY</code><span data-i18n="env.key">Clé générée avec php artisan key:generate --show</span></div>
+                        <div><code>DB_PASSWORD</code><span data-i18n="env.db">Mot de passe MariaDB</span></div>
+                        <div><code>ADMIN_EMAILS</code><span data-i18n="env.admin">Adresse(s) du ou des comptes administrateurs</span></div>
+                        <div><code>AWS_*</code><span data-i18n="env.s3">Bucket S3 / R2 qui stocke les images</span></div>
+                        <div><code>TRUSTED_PROXIES</code><span data-i18n="env.proxy">Adresse du reverse proxy (ou * sur un réseau privé)</span></div>
+                        <div><code>APP_LOCALE</code><span data-i18n="env.locale">Langue par défaut : fr ou en</span></div>
+                    </div>
+                </li>
+                <li>
+                    <h3 data-i18n="inst.3">Démarrer</h3>
+                    <pre><code>docker compose pull
+docker compose up -d
+docker exec -it deepsky-app php artisan user:set-password admin@example.com</code></pre>
+                    <p data-i18n="inst.3text">Les migrations, les caches et la file d’attente se lancent au démarrage du conteneur, qui expose un contrôle de santé. Une sauvegarde quotidienne de la base est écrite dans ./backups.</p>
+                </li>
+            </ol>
+            <div class="cta center">
+                <a class="button primary" href="https://github.com/pokertour/Deepsky/releases" data-i18n="inst.releases">Notes de version</a>
+                <a class="button" href="https://github.com/pokertour/Deepsky#readme" data-i18n="inst.readme">Documentation complète</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <img src="assets/logo.svg" alt="" width="28" height="28">
+        <p data-i18n-html="footer.text">Fait avec patience sous le ciel nantais, une pose de 300 s à la fois.<br>Licence MIT · <a href="https://github.com/pokertour">pokertour</a></p>
+    </footer>
+
+    <script src="assets/site.js" defer></script>
+</body>
+</html>
