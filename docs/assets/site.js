@@ -41,7 +41,7 @@
         'env.proxy': 'Reverse proxy address (or * on a private network)', 'env.locale': 'Default language: fr or en',
         'inst.3text': 'Migrations, caches and the queue start with the container, which exposes a health check. A daily database backup is written to ./backups.',
         'inst.releases': 'Release notes', 'inst.readme': 'Full documentation',
-        'footer.text': 'Made with patience under the skies of Nantes, one 300 s exposure at a time.<br>MIT licence · <a href="https://github.com/pokertour">pokertour</a>',
+        'footer.text': 'Made with patience under the skies of Nantes, one 300 s exposure at a time.<br>Code under the MIT licence · Photos © pokertour, all rights reserved · <a href="https://github.com/pokertour">pokertour</a>',
     };
     const fr = {};
     const texts = document.querySelectorAll('[data-i18n]');

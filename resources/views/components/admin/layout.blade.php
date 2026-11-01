@@ -16,6 +16,8 @@
     @livewireStyles
 </head>
 @php
+    // Lecture du cache seulement (alimenté par app:check-release) : aucun appel réseau ici.
+    $updateAvailable = app(App\Services\Admin\ReleaseChecker::class)->isUpdateAvailable();
     $isNightScope = request()->routeIs('admin.nightscope.*') || request()->routeIs('admin.celestial-objects.*');
     $nightScopeTabs = [
         ['admin.nightscope.tonight', __('Tonight')],
@@ -55,6 +57,7 @@
                 'tasks' => 'M9 6h11M9 12h11M9 18h11M4.5 6l.75.75L6.75 5M4.5 12l.75.75L6.75 11M4.5 18l.75.75L6.75 17',
                 'newsletter' => 'M4 6h16v12H4V6Zm0 1 8 6 8-6',
                 'settings' => 'M10.3 4.3a1.7 1.7 0 0 1 3.4 0 1.7 1.7 0 0 0 2.6 1.1 1.7 1.7 0 0 1 2.4 2.4 1.7 1.7 0 0 0 1 2.5 1.7 1.7 0 0 1 0 3.4 1.7 1.7 0 0 0-1 2.6 1.7 1.7 0 0 1-2.4 2.4 1.7 1.7 0 0 0-2.6 1 1.7 1.7 0 0 1-3.4 0 1.7 1.7 0 0 0-2.5-1 1.7 1.7 0 0 1-2.4-2.4 1.7 1.7 0 0 0-1.1-2.6 1.7 1.7 0 0 1 0-3.4 1.7 1.7 0 0 0 1.1-2.5 1.7 1.7 0 0 1 2.4-2.4 1.7 1.7 0 0 0 2.5-1.1ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z',
+                'about' => 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm0-6v-4m0-4h.01',
                 'security' => 'M12 3 5 6v5c0 4.4 3 8.3 7 10 4-1.7 7-5.6 7-10V6l-7-3Zm-2.5 9 2 2 4-4',
             ];
             $sections = [
@@ -73,6 +76,7 @@
                     ['admin.newsletter.index', __('Newsletter'), 'newsletter'],
                     ['admin.settings.edit', __('Paramètres'), 'settings'],
                     ['admin.security.edit', __('Sécurité'), 'security'],
+                    ['admin.about', __('À propos'), 'about'],
                 ],
             ];
             $nightScopeLinks = [
@@ -115,7 +119,10 @@
                                 'text-text-main/70 hover:bg-white/[.04] hover:text-text-bold' => ! $isActive($routeName),
                             ])>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" @class(['size-[18px] shrink-0', 'text-accent' => $isActive($routeName), 'text-text-main/45' => ! $isActive($routeName)]) aria-hidden="true"><path d="{{ $icons[$icon] }}"/></svg>
-                                {{ $label }}
+                                <span class="min-w-0 flex-1">{{ $label }}</span>
+                                @if ($routeName === 'admin.about' && $updateAvailable)
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-semibold text-accent"><span class="size-1.5 animate-pulse rounded-full bg-accent"></span>{{ __('Nouveau') }}</span>
+                                @endif
                             </a>
                         @endforeach
                     </div>
@@ -139,7 +146,7 @@
             <div class="mt-2 flex items-center justify-between px-1 font-[var(--font-mono)] text-[10px] text-text-main/40">
                 <a href="/offline.html" class="hover:text-accent">{{ __('Plans hors connexion ↗') }}</a>
                 <x-locale-switcher class="tracking-normal" />
-                <span>{{ config('app.version') }}</span>
+                <a wire:navigate href="{{ route('admin.about') }}" @class(['inline-flex items-center gap-1.5 hover:text-accent', 'text-accent' => $updateAvailable]) title="{{ $updateAvailable ? __('Nouvelle version disponible') : __('À propos') }}">@if ($updateAvailable)<span class="size-1.5 animate-pulse rounded-full bg-accent"></span>@endif{{ config('app.version') }}</a>
             </div>
         </div>
     </aside>
@@ -148,7 +155,7 @@
         <header class="sticky top-0 z-30 border-b border-border bg-bg/90 pt-[calc(env(safe-area-inset-top,0px)+var(--pwa-top-spacing))] backdrop-blur-xl">
             <div class="flex flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-4 lg:px-10 lg:py-0 lg:h-20">
                 <div class="flex min-w-0 items-center gap-3 lg:flex-1">
-                    <button type="button" class="grid size-11 shrink-0 place-items-center rounded-xl border border-border bg-card-bg text-text-bold lg:hidden" @click="navigationOpen = true" aria-label="{{ __('Ouvrir le menu') }}">☰</button>
+                    <button type="button" class="grid size-11 shrink-0 place-items-center rounded-xl border border-border bg-card-bg text-text-bold lg:hidden" @click="navigationOpen = true" aria-label="{{ __('Ouvrir le menu') }}"><span class="relative">☰@if ($updateAvailable)<span class="absolute -right-2 -top-1 size-2 rounded-full bg-accent ring-2 ring-card-bg"></span>@endif</span></button>
                     <div class="min-w-0 flex-1">
                         @if ($eyebrow)<p class="truncate font-[var(--font-mono)] text-[10px] uppercase tracking-[.2em] text-accent">{{ $eyebrow }}</p>@endif
                         <h1 class="truncate text-lg font-semibold text-text-bold sm:text-xl">{{ $title }}</h1>

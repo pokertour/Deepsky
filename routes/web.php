@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\AstrophotoController as AdminAstrophotoController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\TwoFactorChallengeController;
@@ -146,6 +147,8 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::put('/parametres/notifications', [SettingsController::class, 'updateNotifications'])->name('settings.notifications.update');
         Route::post('/parametres/test-smtp', [SettingsController::class, 'test'])->name('settings.test');
         Route::get('/securite', [SecurityController::class, 'edit'])->name('security.edit');
+        Route::get('/a-propos', [AboutController::class, 'show'])->name('about');
+        Route::post('/a-propos/verifier', [AboutController::class, 'refresh'])->middleware('throttle:6,1')->name('about.refresh');
         Route::post('/securite/double-authentification', [SecurityController::class, 'enableTwoFactor'])->middleware('throttle:10,1')->name('security.two-factor.enable');
         Route::delete('/securite/double-authentification', [SecurityController::class, 'disableTwoFactor'])->middleware('throttle:10,1')->name('security.two-factor.disable');
         Route::post('/securite/sessions', [SecurityController::class, 'logoutOtherSessions'])->middleware('throttle:10,1')->name('security.sessions.destroy');

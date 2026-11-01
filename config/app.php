@@ -17,6 +17,9 @@ return [
 
     'version' => env('APP_VERSION', 'local-dev'),
 
+    // Dépôt GitHub interrogé pour signaler les nouvelles versions dans l'admin.
+    'repository' => env('APP_REPOSITORY', 'pokertour/Deepsky'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

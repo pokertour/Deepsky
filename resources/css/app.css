@@ -134,3 +134,12 @@ html[data-night-mode='red']::after {
     from { opacity: 0; transform: translateY(8px) scale(.98); }
     to { opacity: 1; transform: none; }
 }
+
+/* Notes de version (Markdown GitHub) sur la page À propos de l'admin. */
+.release-notes { font-size: .875rem; line-height: 1.7; color: color-mix(in srgb, var(--text) 85%, transparent); }
+.release-notes h1, .release-notes h2, .release-notes h3 { margin: 1.2em 0 .5em; font-size: .95rem; font-weight: 600; color: var(--text-bold); }
+.release-notes ul, .release-notes ol { margin: .5em 0; padding-left: 1.25rem; list-style: disc; }
+.release-notes li { margin: .25em 0; }
+.release-notes a { color: var(--accent); overflow-wrap: anywhere; }
+.release-notes code { padding: .1em .35em; border-radius: .3rem; background: rgb(255 255 255 / .06); font-size: .8em; }
+.release-notes p { margin: .6em 0; }
