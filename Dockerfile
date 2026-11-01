@@ -3,6 +3,12 @@ FROM dunglas/frankenphp:1-php8.5-alpine AS app-base
 
 ARG APP_VERSION=local-dev
 
+# Rattache l'image publiée sur GHCR au dépôt GitHub (page du package, droits, licence).
+LABEL org.opencontainers.image.source="https://github.com/pokertour/Deepsky" \
+      org.opencontainers.image.description="Deepsky: self-hosted astrophotography portfolio and NightScope cockpit" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.version="${APP_VERSION}"
+
 # Configuration globale pour Octane et Redis (Baked-in)
 ENV OCTANE_SERVER=frankenphp \
     REDIS_HOST=redis \
