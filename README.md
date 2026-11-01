@@ -218,4 +218,8 @@ Everything else is set from the admin area under **Settings**: Astrometry.net an
 
 ## 📄 License
 
-Distributed under the MIT License. Made with patience under the skies of Nantes by [pokertour](https://github.com/pokertour).
+The source code is distributed under the [MIT License](LICENSE).
+
+The astrophotographs shown in this README and on the project page (`docs/assets/img/`) are **© pokertour, all rights reserved**: they are not covered by the MIT License and may not be reused, modified or redistributed without permission.
+
+Made with patience under the skies of Nantes by [pokertour](https://github.com/pokertour).
