@@ -141,7 +141,7 @@ docker exec -it deepsky-app php artisan user:set-password admin@example.com
 
 The provided [`docker-compose.yml`](docker-compose.yml) runs:
 
-- **app**: the application, exposed on port `8080`, with a built-in health check. On start-up it runs the migrations, warms the caches and starts the queue workers and the scheduler.
+- **app**: the application, exposed on port `8080`, with a built-in health check. On start-up it runs the migrations and warms the caches; supervisord then runs Octane (FrankenPHP), one queue worker (`default` then `media` jobs) and the scheduler.
 - **mariadb**: the database, only reachable from the host (`127.0.0.1:3308`).
 - **mariadb-backup**: a daily compressed dump in `./backups`, kept for `BACKUP_RETENTION_DAYS` days (14 by default).
 - **redis**: cache and queues.
@@ -200,6 +200,7 @@ The main `.env` values:
 | `TRUSTED_PROXIES` | Reverse proxy address, or `*` when the container is only reachable from a private network |
 | `TRUSTED_HOSTS` | Allowed host names (for example `deepsky.example.com`) |
 | `LIVE_SKY_*` | Place shown on the live sky (label, latitude, longitude, time zone) |
+| `OCTANE_WORKERS` | Number of FrankenPHP workers serving requests (default `2`; each one keeps the app in memory) |
 | `TURNSTILE_HOSTNAMES` | Host names accepted by the newsletter captcha check |
 
 Everything else is set from the admin area under **Settings**: Astrometry.net and Gemini API keys, captcha provider (Cloudflare Turnstile or hCaptcha), SMTP server, and NightScope notification channels and language. Secrets are stored encrypted.
