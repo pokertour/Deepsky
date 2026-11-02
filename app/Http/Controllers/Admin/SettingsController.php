@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\TestNotificationRequest;
 use App\Http\Requests\Admin\TestSmtpRequest;
 use App\Http\Requests\Admin\UpdateNotificationSettingsRequest;
 use App\Http\Requests\Admin\UpdateSettingsRequest;
+use App\Services\CaptchaService;
 use App\Services\Notifications\NightScopeNotificationDispatcher;
 use App\Settings\IntegrationSettings;
 use App\Settings\MailSettings;
@@ -112,6 +113,13 @@ class SettingsController extends Controller
         }
 
         return back()->with('success', __('Email de test envoyé.'));
+    }
+
+    public function testCaptcha(CaptchaService $captcha): RedirectResponse
+    {
+        $result = $captcha->testSecret();
+
+        return back()->with($result['ok'] ? 'success' : 'error', $result['message']);
     }
 
     public function testNotification(

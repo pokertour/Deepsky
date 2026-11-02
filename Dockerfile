@@ -11,6 +11,7 @@ LABEL org.opencontainers.image.source="https://github.com/pokertour/Deepsky" \
 
 # Configuration globale pour Octane et Redis (Baked-in)
 ENV OCTANE_SERVER=frankenphp \
+    OCTANE_WORKERS=2 \
     REDIS_HOST=redis \
     CACHE_STORE=redis \
     SESSION_DRIVER=redis \
@@ -49,8 +50,9 @@ RUN install-php-extensions \
 RUN echo "upload_max_filesize=300M" > /usr/local/etc/php/conf.d/prod.ini && \
     echo "post_max_size=300M" >> /usr/local/etc/php/conf.d/prod.ini && \
     echo "memory_limit=1024M" >> /usr/local/etc/php/conf.d/prod.ini && \
-    echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/prod.ini && \
-    echo "opcache.jit=tracing" >> /usr/local/etc/php/conf.d/prod.ini
+    echo "opcache.enable_cli=0" >> /usr/local/etc/php/conf.d/prod.ini && \
+    echo "opcache.jit=tracing" >> /usr/local/etc/php/conf.d/prod.ini && \
+    echo "opcache.jit_buffer_size=32M" >> /usr/local/etc/php/conf.d/prod.ini
 
 COPY docker/imagemagick-policy.xml /etc/ImageMagick-7/policy.xml
 
