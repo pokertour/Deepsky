@@ -4,10 +4,12 @@ namespace Tests\Feature;
 
 use App\Enums\CaptchaProvider;
 use App\Mail\ConfirmNewsletterSubscription;
+use App\Models\User;
 use App\Services\CaptchaService;
 use App\Settings\IntegrationSettings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -172,5 +174,44 @@ class TurnstileIntegrationTest extends TestCase
         Http::fake();
         $this->assertFalse(app(CaptchaService::class)->verify('token', null, 'newsletter'));
         Http::assertNothingSent();
+    }
+
+    public function test_admin_checks_that_the_stored_secret_is_accepted_by_siteverify(): void
+    {
+        config(['admin.emails' => ['owner@example.com']]);
+        $admin = User::factory()->create(['email' => 'owner@example.com']);
+        Http::fake([self::SITEVERIFY => Http::sequence()
+            ->push(['success' => false, 'error-codes' => ['invalid-input-response']])
+            ->push(['success' => false, 'error-codes' => ['invalid-input-secret']]),
+        ]);
+
+        $this->actingAs($admin)->from(route('admin.settings.edit'))
+            ->post(route('admin.settings.captcha.test'))
+            ->assertRedirect(route('admin.settings.edit'))
+            ->assertSessionHas('success', 'Clé secrète acceptée par Cloudflare Turnstile : Siteverify fonctionne.');
+
+        $this->from(route('admin.settings.edit'))
+            ->post(route('admin.settings.captcha.test'))
+            ->assertSessionHas('error', 'Clé secrète refusée par Cloudflare Turnstile : vérifie qu’elle correspond bien au widget.');
+
+        Http::assertSent(fn ($request): bool => $request->url() === self::SITEVERIFY
+            && $request['secret'] === 'test-secret-not-a-real-key'
+            && $request['response'] === 'deepsky-secret-check');
+
+        $this->get(route('admin.settings.edit'))->assertSee('Une clé secrète est enregistrée.')->assertSee('Tester la clé secrète');
+    }
+
+    public function test_rejections_are_logged_with_their_reason_but_never_the_token_or_secret(): void
+    {
+        Log::spy();
+        Http::fake([self::SITEVERIFY => Http::response(['success' => false, 'error-codes' => ['timeout-or-duplicate']])]);
+
+        $this->post(route('newsletter.subscribe'), ['email' => 'astro@example.com', 'cf-turnstile-response' => 'expired-token']);
+        $this->post(route('newsletter.subscribe'), ['email' => 'astro@example.com']);
+
+        Log::shouldHaveReceived('warning')
+            ->with('Captcha newsletter refusé : jeton refusé par Cloudflare Turnstile', ['provider' => 'turnstile', 'error_codes' => ['timeout-or-duplicate']]);
+        Log::shouldHaveReceived('warning')
+            ->with('Captcha newsletter refusé : aucun jeton reçu avec le formulaire', ['provider' => 'turnstile', 'error_codes' => []]);
     }
 }

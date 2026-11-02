@@ -146,6 +146,7 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::put('/parametres', [SettingsController::class, 'update'])->name('settings.update');
         Route::put('/parametres/notifications', [SettingsController::class, 'updateNotifications'])->name('settings.notifications.update');
         Route::post('/parametres/test-smtp', [SettingsController::class, 'test'])->name('settings.test');
+        Route::post('/parametres/test-captcha', [SettingsController::class, 'testCaptcha'])->middleware('throttle:6,1')->name('settings.captcha.test');
         Route::get('/securite', [SecurityController::class, 'edit'])->name('security.edit');
         Route::get('/a-propos', [AboutController::class, 'show'])->name('about');
         Route::post('/a-propos/verifier', [AboutController::class, 'refresh'])->middleware('throttle:6,1')->name('about.refresh');

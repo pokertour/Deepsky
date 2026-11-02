@@ -20,6 +20,10 @@ function renderNewsletterCaptcha() {
         if (turnstile) {
             options.action = element.dataset.action;
             options.appearance = element.dataset.appearance;
+            // Le défi n'est lancé qu'à l'envoi du formulaire : chaque jeton émis est
+            // ensuite vérifié côté serveur (Siteverify), au lieu d'un jeton par page vue.
+            options.execution = 'execute';
+            options.callback = window.onNewsletterCaptchaVerified;
         } else {
             options.callback = window.onNewsletterCaptchaVerified;
         }
@@ -32,8 +36,26 @@ window.onNewsletterCaptchaLoaded = () => {
     renderNewsletterCaptcha();
 };
 
+// Turnstile en mode « execute » : le premier envoi déclenche le défi, et son callback
+// soumet le formulaire une fois le jeton obtenu.
+function requestTurnstileToken(event) {
+    const form = event.target;
+    const widget = form.querySelector('.cf-turnstile[data-captcha-widget]');
+    if (!widget || !window.turnstile) return;
+
+    const token = form.querySelector('[name="cf-turnstile-response"]')?.value;
+    if (token) return;
+
+    event.preventDefault();
+    if (form.reportValidity()) {
+        window.turnstile.execute(widget);
+    }
+}
+
 onPageLoad(() => {
     renderNewsletterCaptcha();
+    const form = document.getElementById('newsletter-form');
+    form?.addEventListener('submit', requestTurnstileToken);
     const newsletter = document.getElementById('newsletter');
     if (newsletter?.dataset.hasFeedback === 'true') {
         newsletter.scrollIntoView({
@@ -44,6 +66,7 @@ onPageLoad(() => {
     }
 
     return () => {
+        form?.removeEventListener('submit', requestTurnstileToken);
         document.querySelectorAll('#newsletter-form [data-captcha-widget]').forEach((element) => {
             const provider = element.classList.contains('cf-turnstile') ? window.turnstile : window.hcaptcha;
             provider?.remove(element.dataset.captchaWidget);
