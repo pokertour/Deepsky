@@ -108,6 +108,34 @@ class ManageSettingsPageTest extends TestCase
             ->assertSessionHasErrors(['host', 'from_address']);
     }
 
+    public function test_umami_analytics_is_configured_from_the_admin_and_only_tracks_public_pages(): void
+    {
+        $this->get(route('welcome'))->assertOk()->assertDontSee('data-website-id', false);
+
+        $this->put(route('admin.settings.update'), $this->validData([
+            'umami_script_url' => 'https://umami.example.org/script.js',
+            'umami_website_id' => 'eb413e01-f79e-4512-b980-998a41afb018',
+        ]))->assertSessionHasNoErrors();
+
+        $public = $this->get(route('welcome'))->assertOk()
+            ->assertSee('<script defer src="https://umami.example.org/script.js" data-website-id="eb413e01-f79e-4512-b980-998a41afb018"></script>', false);
+        $this->assertStringContainsString('https://umami.example.org', $public->headers->get('Content-Security-Policy'));
+
+        $this->get(route('admin.dashboard'))->assertOk()->assertDontSee('data-website-id', false);
+    }
+
+    public function test_umami_settings_require_an_https_script_and_a_uuid(): void
+    {
+        $this->from(route('admin.settings.edit'))->put(route('admin.settings.update'), $this->validData([
+            'umami_script_url' => 'http://umami.example.org/script.js',
+            'umami_website_id' => 'pas-un-uuid',
+        ]))->assertSessionHasErrors(['umami_script_url', 'umami_website_id']);
+
+        $this->from(route('admin.settings.edit'))->put(route('admin.settings.update'), $this->validData([
+            'umami_script_url' => 'https://umami.example.org/script.js',
+        ]))->assertSessionHasErrors('umami_website_id');
+    }
+
     private function validData(array $overrides = []): array
     {
         return array_merge([

@@ -46,6 +46,7 @@
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/images/logo/deepsky.svg') }}">
     <x-pwa-head />
+    <x-analytics />
 
     <style>
         [x-cloak] {

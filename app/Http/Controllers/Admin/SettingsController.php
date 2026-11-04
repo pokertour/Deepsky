@@ -33,6 +33,8 @@ class SettingsController extends Controller
         $data = $request->validated();
         $integrations->captcha_provider = CaptchaProvider::from($data['captcha_provider']);
         $integrations->captcha_site_key = $data['captcha_site_key'] ?: null;
+        $integrations->umami_script_url = ($data['umami_script_url'] ?? null) ?: null;
+        $integrations->umami_website_id = ($data['umami_website_id'] ?? null) ?: null;
 
         if (filled($data['astrometry_api_key'])) {
             $integrations->astrometry_api_key = $data['astrometry_api_key'];

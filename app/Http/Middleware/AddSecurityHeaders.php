@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Analytics;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
@@ -63,15 +64,17 @@ class AddSecurityHeaders
     {
         $captcha = implode(' ', self::CAPTCHA_ORIGINS);
         $devServer = $this->viteDevServerOrigins();
+        // Instance Umami réglée dans l'admin : son script et ses envois de statistiques.
+        $analytics = Analytics::umami()['origin'] ?? '';
 
         $directives = [
             'default-src' => "'self'",
-            'script-src' => trim("'self' 'unsafe-inline' 'unsafe-eval' {$captcha} {$devServer}"),
+            'script-src' => trim("'self' 'unsafe-inline' 'unsafe-eval' {$captcha} {$analytics} {$devServer}"),
             'style-src' => trim("'self' 'unsafe-inline' https://fonts.googleapis.com {$captcha} {$devServer}"),
             'font-src' => "'self' data: https://fonts.gstatic.com",
             'img-src' => "'self' data: blob: https:",
             'media-src' => "'self' blob:",
-            'connect-src' => trim("'self' {$captcha} {$devServer}"),
+            'connect-src' => trim("'self' {$captcha} {$analytics} {$devServer}"),
             'frame-src' => trim("'self' {$captcha}"),
             'worker-src' => "'self' blob:",
             'manifest-src' => "'self'",
