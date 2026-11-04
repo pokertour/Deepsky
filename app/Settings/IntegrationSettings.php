@@ -24,6 +24,10 @@ class IntegrationSettings extends Settings
 
     public ?string $captcha_secret_key;
 
+    public ?string $umami_script_url;
+
+    public ?string $umami_website_id;
+
     public static function group(): string
     {
         return 'integrations';

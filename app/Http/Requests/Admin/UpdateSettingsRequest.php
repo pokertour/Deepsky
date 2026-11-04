@@ -33,6 +33,8 @@ class UpdateSettingsRequest extends FormRequest
                     && blank(app(IntegrationSettings::class)->captcha_secret_key)),
                 'string',
             ],
+            'umami_script_url' => ['nullable', 'url:https', 'max:255', 'required_with:umami_website_id'],
+            'umami_website_id' => ['nullable', 'uuid', 'required_with:umami_script_url'],
             'host' => ['required', 'string', 'max:255'],
             'port' => ['required', 'integer', 'between:1,65535'],
             'username' => ['nullable', 'string', 'max:255'],

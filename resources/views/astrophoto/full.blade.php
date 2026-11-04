@@ -85,6 +85,7 @@
         }
     </style>
     @livewireStyles
+    <x-analytics />
 </head>
 
 <body class="m-0 p-0 overflow-hidden bg-[#010409]">
